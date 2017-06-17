@@ -22,6 +22,12 @@ public class Player {
         hand.addCard(card);
     }
 
+    public void giveCards(Card[] cards) {
+        for (int i = 0; i < cards.length; i++) {
+            hand.addCard(cards[i]);
+        }
+    }
+
     public Hand getHand() {
         return hand;
     }

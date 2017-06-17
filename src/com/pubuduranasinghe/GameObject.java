@@ -5,7 +5,7 @@ import java.util.Scanner;
 /**
  * Created by Pubudu on 2017-06-17.
  */
-public class Game {
+public class GameObject {
     public static void play() {
         int user_score = 0, computer_score = 0;
         int user_score_alpha = 0;
@@ -26,10 +26,8 @@ public class Game {
         Player user = new Player("Player 1", new Hand());
         Player computer = new Player("Computer", new Hand());
 
-        for(int i = 0; i < 5; i++) {
-            user.giveCard(deck.dealCard());
-            computer.giveCard(deck.dealCard());
-        }
+        user.giveCards(deck.dealCards(5));
+        computer.giveCards(deck.dealCards(5));
 
         printInitialHand(user.getHand(), computer.getHand());
 
@@ -41,7 +39,6 @@ public class Game {
             System.out.println("You can swap "+(3-i)+" cards. Enter index of card to swap. (0 to skip)");
             int card_index = input.nextInt() - 1;
             if(card_index == -1) break;
-            //System.out.println("Swapping " + user_hand.getCard(card_index));
             deck.returnCard(user.hand.getCard(card_index));
             deck.shuffleExisting();
             user.hand.replaceCard(card_index, deck.dealCard());

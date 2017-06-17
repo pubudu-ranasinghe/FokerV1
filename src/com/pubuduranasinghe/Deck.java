@@ -50,6 +50,18 @@ public class Deck {
         return deck[cardsUsed -1];
     }
 
+    public Card[] dealCards(int count) {
+        if(count == 0)
+            throw new IllegalArgumentException("Cannot draw 0 cards");
+        if(cardsLeft() < count)
+            throw new IllegalStateException("Deck doesn't have that many cards");
+        Card[] c = new Card[count];
+        for (int i = 0; i < count; i++) {
+            c[i] = this.dealCard();
+        }
+        return c;
+    }
+
     public void returnCard(Card card) {
         if(cardsLeft() == 52)
             throw new IllegalStateException("Deck is already full");
