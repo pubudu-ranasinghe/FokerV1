@@ -15,24 +15,26 @@ public class Game {
         int computer_score_beta = 0;
         int computer_score_risk = 0;
 
-        System.out.println("This program lets you play a simple foker card game");
+        System.out.println("This program lets you play a simple Foker card game");
         Deck deck = new Deck();
 
         System.out.println("Shuffling..");
         deck.shuffle();
 
         System.out.println("Dealing..");
-        Hand user_hand = new Hand();
-        Hand computer_hand = new Hand();
+
+        Player user = new Player("Player 1", new Hand());
+        Player computer = new Player("Computer", new Hand());
+
         for(int i = 0; i < 5; i++) {
-            user_hand.addCard(deck.dealCard());
-            computer_hand.addCard(deck.dealCard());
+            user.giveCard(deck.dealCard());
+            computer.giveCard(deck.dealCard());
         }
 
-        printInitialHand(user_hand, computer_hand);
+        printInitialHand(user.getHand(), computer.getHand());
 
-        user_score_alpha = user_hand.calculateHandScore();
-        computer_score_alpha = computer_hand.calculateHandScore();
+        user_score_alpha = user.hand.calculateHandScore();
+        computer_score_alpha = computer.hand.calculateHandScore();
 
         Scanner input = new Scanner(System.in);
         for(int i = 0; i < 3; i++) {
@@ -40,15 +42,15 @@ public class Game {
             int card_index = input.nextInt() - 1;
             if(card_index == -1) break;
             //System.out.println("Swapping " + user_hand.getCard(card_index));
-            deck.returnCard(user_hand.getCard(card_index));
+            deck.returnCard(user.hand.getCard(card_index));
             deck.shuffleExisting();
-            user_hand.replaceCard(card_index, deck.dealCard());
+            user.hand.replaceCard(card_index, deck.dealCard());
         }
 
-        user_score_beta = user_hand.calculateHandScore();
-        computer_score_beta = computer_hand.calculateHandScore();
+        user_score_beta = user.hand.calculateHandScore();
+        computer_score_beta = computer.hand.calculateHandScore();
 
-        printSecondHand(user_hand, computer_hand);
+        printSecondHand(user.getHand(), computer.getHand());
 
         System.out.println("Scoring..");
         user_score = calculateScore(user_score_alpha, user_score_beta, 1);
@@ -105,7 +107,6 @@ public class Game {
     private static int calculateScore(int alpha, int beta, int risk) {
         int delta;
         delta = ((alpha - beta) <= 0) ? 1 : -1;
-        System.out.println("Delta is " + delta);
 //        return (alpha - beta) + delta * risk;
         return alpha;
     }
