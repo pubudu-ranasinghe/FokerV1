@@ -50,8 +50,8 @@ public class Main {
         printSecondHand(user_hand, computer_hand);
 
         System.out.println("Scoring..");
-        user_score = calculateScore(user_score_alpha, user_score_beta, user_score_risk);
-        computer_score = calculateScore(computer_score_alpha, computer_score_beta, computer_score_risk);
+        user_score = calculateScore(user_score_alpha, user_score_beta, 1);
+        computer_score = calculateScore(computer_score_alpha, computer_score_beta, 1);
         System.out.format("%-30s%-30s", user_score, computer_score);
         System.out.println();
 
@@ -69,7 +69,8 @@ public class Main {
         int delta;
         delta = ((alpha - beta) <= 0) ? 1 : -1;
         System.out.println("Delta is " + delta);
-        return 0;
+//        return (alpha - beta) + delta * risk;
+        return alpha;
     }
 
     public static void printInitialHand(Hand user, Hand computer) {
