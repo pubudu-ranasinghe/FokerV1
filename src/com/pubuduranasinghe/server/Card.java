@@ -1,4 +1,4 @@
-package com.pubuduranasinghe;
+package com.pubuduranasinghe.server;
 
 /**
  * Created by Pubudu on 2017-06-15.

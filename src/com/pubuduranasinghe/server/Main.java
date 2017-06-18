@@ -1,4 +1,4 @@
-package com.pubuduranasinghe;
+package com.pubuduranasinghe.server;
 
 public class Main {
 
