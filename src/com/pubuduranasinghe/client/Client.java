@@ -23,21 +23,6 @@ public class Client extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-//        primaryStage.initStyle(StageStyle.UNDECORATED);
-        primaryStage.setTitle("Hello FX");
 
-        Group root = new Group();
-        Scene theScene = new Scene(root);
-        primaryStage.setScene(theScene);
-
-        Canvas canvas = new Canvas(800, 600);
-        root.getChildren().add(canvas);
-
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.CORNFLOWERBLUE);
-        Font theFont = Font.font("Circular Std Bold", FontWeight.NORMAL, 48);
-        gc.setFont(theFont);
-        gc.fillText("Hello FX!", 400, 300);
-        primaryStage.show();
     }
 }
