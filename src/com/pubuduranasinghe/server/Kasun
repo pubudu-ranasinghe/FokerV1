@@ -1,0 +1,149 @@
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class Server implements Runnable {
+
+	private  List<ServerClient> clients = new ArrayList<ServerClient>();
+        
+	private DatagramSocket socket;
+        private int port;
+	private int portt = 9091;
+	private boolean running = false;
+	private Thread run, manage, send, receive;
+        private InetAddress ip;
+        static HashMap<Integer, Integer> hmap = new HashMap<Integer,Integer>();
+        private int max=0;
+        private int hport;
+ServerSocket server ;
+	public Server(int port) {
+		this.port = port;
+		try {
+			socket = new DatagramSocket(port);
+		} catch (SocketException e) {
+			e.printStackTrace();
+			return;
+		}
+		run = new Thread(this, "Server");
+		run.start();
+	}
+
+	public void run() {
+		running = true;
+		System.out.println("Server started on port " + port);
+		manageClients();
+		receive();
+	}
+
+	private void manageClients() {
+		manage = new Thread("Manage") {
+			public void run() {
+				while (running) {
+					// Managing
+				}
+			}
+		};
+		manage.start();
+	}
+
+	private void receive()
+	 {  ///This is for the check of clients who have connected to game, and verfiy hands
+		receive = new Thread("Receive") {
+			public void run() {
+				while (running) {
+					byte[] data = new byte[12];
+					DatagramPacket packet = new DatagramPacket(data, data.length);
+					try {
+						socket.receive(packet);
+                                                //byte[] dataa = new byte[packet.getLength()];
+                                                //packet = new DatagramPacket(data, dataa.length);
+                                                int actualSize = packet.getLength();
+            byte[] actualPacket = new byte[actualSize];
+            System.arraycopy(packet.getData(), packet.getOffset(), data, 0, packet.getLength());
+
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					process(packet);
+
+					//clients.add(new ServerClient("Yan", packet.getAddress(), packet.getPort(), 50));
+				//	System.out.println(clients.get(0).address.toString() + ":" + clients.get(0).port);
+				}
+			}
+		};
+		receive.start();
+	}
+
+	private void sendToAll(String message) {
+            try {
+                ip = InetAddress.getByName("localhost");
+                String address = ip.toString();
+                 //System.out.println(message);
+                for (int i = 0; i < clients.size(); i++) {
+                    ServerClient client = clients.get(i);
+                        System.out.println(client.toString());
+                        System.out.println(client);
+                        System.out.println(client.address);
+                        System.out.println(client.port);
+                        System.out.println(client.name);
+			send(message.getBytes(), client.address, client.port);
+                }
+                /*for(int i = 0; i<clientcount; i++)
+                {
+                    send(message.getBytes(),ip,portt);
+                }*/
+            } catch (UnknownHostException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
+	}
+
+	private void send(final byte[] data, final InetAddress address, final int port) {
+		send = new Thread("Send") {
+			public void run() {
+				DatagramPacket packet = new DatagramPacket(data, data.length, address, port);
+				try {
+					socket.send(packet);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		send.start();
+	}
+ 
+ //////////////////////////////////////////////////////////////////////////////////////////////
+ /////Here we need to have the gaming logic which connects with Java FX UI/////////////////////
+ //////////////////////////////////////////////////////////////////////////////////////////////
+ 
+  public void close() {
+		new Thread() {
+			public void run() {
+				synchronized (socket) {
+					socket.close();
+				}
+			}
+		}.start();
+	}      
+        
+        
+public static void main(String[] args) {
+    Server s1 = new Server(9091);
+    s1.run();
+   
+}
+}
